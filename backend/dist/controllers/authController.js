@@ -13,8 +13,8 @@ const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const JWT_SECRET = process.env.JWT_SECRET || "default_secret";
 const sendOtp = async (req, res) => {
+    const { email } = req.body;
     try {
-        const { email } = req.body;
         if (!email) {
             res.status(400).json({ message: "Email is required" });
             return;
@@ -31,8 +31,8 @@ const sendOtp = async (req, res) => {
 };
 exports.sendOtp = sendOtp;
 const verifyOtp = async (req, res) => {
+    const { email, otp } = req.body;
     try {
-        const { email, otp } = req.body;
         if (!email || !otp) {
             res.status(400).json({ message: "Email and OTP are required" });
             return;

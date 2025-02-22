@@ -4,18 +4,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const dotenv_1 = __importDefault(require("dotenv"));
-dotenv_1.default.config();
-const JWT_SECRET = process.env.JWT_SECRET || "default_secret";
+const envConfig_1 = require("../config/envConfig");
 const authMiddleware = (req, res, next) => {
-    const token = req.header("Authorization");
-    if (!token) {
-        return res
-            .status(401)
-            .json({ message: "Access denied. No token provided." });
-    }
     try {
-        const decoded = jsonwebtoken_1.default.verify(token.replace("Bearer ", ""), JWT_SECRET);
+        const token = req.header("Authorization");
+        if (!token) {
+            res.status(401).json({ message: "Access denied. No token provided." });
+            return;
+        }
+        const decoded = jsonwebtoken_1.default.verify(token.replace("Bearer ", ""), envConfig_1.JWT_SECRET);
         req.user = decoded;
         next();
     }
