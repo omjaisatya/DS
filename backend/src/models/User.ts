@@ -1,4 +1,4 @@
-import mongoose, { ObjectId } from "mongoose";
+import mongoose from "mongoose";
 
 interface Address extends mongoose.Types.Subdocument {
   label: string;
@@ -7,14 +7,7 @@ interface Address extends mongoose.Types.Subdocument {
   state: string;
   zipCode: string;
   country: string;
-}
-
-interface User extends mongoose.Document {
-  email: string;
-  name: string;
-  phone: string;
-  profilePicture: string;
-  addresses: mongoose.Types.DocumentArray<Address>;
+  isDefault: boolean;
 }
 
 const AddressSchema = new mongoose.Schema<Address>(
@@ -25,9 +18,18 @@ const AddressSchema = new mongoose.Schema<Address>(
     state: { type: String, required: true },
     zipCode: { type: String, required: true },
     country: { type: String, required: true },
+    isDefault: { type: Boolean, default: false },
   },
   { _id: false }
 );
+
+interface User extends mongoose.Document {
+  email: string;
+  name: string;
+  phone: string;
+  profilePicture: string;
+  addresses: mongoose.Types.DocumentArray<Address>;
+}
 
 const UserSchema = new mongoose.Schema<User>(
   {
