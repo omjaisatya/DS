@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import express, { Request, Response, NextFunction } from "express";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
 import User from "../models/User";
@@ -11,8 +11,8 @@ dotenv.config();
 const JWT_SECRET = process.env.JWT_SECRET || "default_secret";
 
 export const sendOtp = async (req: Request, res: Response): Promise<void> => {
+  const { email } = req.body;
   try {
-    const { email } = req.body;
     if (!email) {
       res.status(400).json({ message: "Email is required" });
       return;
@@ -31,8 +31,8 @@ export const sendOtp = async (req: Request, res: Response): Promise<void> => {
 };
 
 export const verifyOtp = async (req: Request, res: Response): Promise<void> => {
+  const { email, otp } = req.body;
   try {
-    const { email, otp } = req.body;
     if (!email || !otp) {
       res.status(400).json({ message: "Email and OTP are required" });
       return;
