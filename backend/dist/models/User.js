@@ -18,6 +18,7 @@ const UserSchema = new mongoose_1.default.Schema({
         },
     ],
     loyaltyPoints: { type: Number, default: 0 },
+    profilePicture: { type: String, default: "" },
 }, { timestamps: true });
 exports.default = mongoose_1.default.model("User", UserSchema);
 //# sourceMappingURL=User.js.map
