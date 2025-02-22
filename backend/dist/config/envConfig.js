@@ -33,15 +33,18 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.JWT_SECRET = exports.EMAIL_USER = exports.EMAIL_PASS = exports.PORT = exports.MONGO_URI = void 0;
+exports.AWS_SECRET_ACCESS_KEY = exports.AWS_REGION = exports.AWS_ACCESS_KEY_ID = exports.JWT_SECRET = exports.EMAIL_USER = exports.EMAIL_PASS = exports.PORT = exports.MONGO_URI = void 0;
 const dotenv = __importStar(require("dotenv"));
 dotenv.config();
-const { MONGO_URI, PORT, EMAIL_USER, EMAIL_PASS, JWT_SECRET } = process.env;
+const { MONGO_URI, PORT, EMAIL_USER, EMAIL_PASS, JWT_SECRET, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION, } = process.env;
 exports.MONGO_URI = MONGO_URI;
 exports.PORT = PORT;
 exports.EMAIL_USER = EMAIL_USER;
 exports.EMAIL_PASS = EMAIL_PASS;
 exports.JWT_SECRET = JWT_SECRET;
+exports.AWS_ACCESS_KEY_ID = AWS_ACCESS_KEY_ID;
+exports.AWS_SECRET_ACCESS_KEY = AWS_SECRET_ACCESS_KEY;
+exports.AWS_REGION = AWS_REGION;
 if (!MONGO_URI) {
     throw new Error("MONGODB_URL is not defined in the environment variables");
 }

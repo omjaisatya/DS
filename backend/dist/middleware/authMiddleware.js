@@ -6,12 +6,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const envConfig_1 = require("../config/envConfig");
 const authMiddleware = (req, res, next) => {
+    const token = req.header("Authorization");
+    if (!token) {
+        res.status(401).json({ message: "Access denied. No token provided." });
+        return;
+    }
     try {
-        const token = req.header("Authorization");
-        if (!token) {
-            res.status(401).json({ message: "Access denied. No token provided." });
-            return;
-        }
         const decoded = jsonwebtoken_1.default.verify(token.replace("Bearer ", ""), envConfig_1.JWT_SECRET);
         req.user = decoded;
         next();
