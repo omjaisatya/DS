@@ -1,31 +1,37 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import dotenv from "dotenv";
+import { JWT_SECRET } from "../config/envConfig";
 
-dotenv.config();
-
-const JWT_SECRET = process.env.JWT_SECRET || "default_secret";
-
-interface AuthRequest extends Request {
-  user?: any;
+declare global {
+  namespace Express {
+    interface Request {
+      user?: {
+        userId: string;
+        email: string;
+      };
+    }
+  }
 }
 
 const authMiddleware = (
-  req: AuthRequest,
+  req: Request,
   res: Response,
   next: NextFunction
-) => {
-  const token = req.header("Authorization");
-
-  if (!token) {
-    return res
-      .status(401)
-      .json({ message: "Access denied. No token provided." });
-  }
-
+): void => {
   try {
-    const decoded = jwt.verify(token.replace("Bearer ", ""), JWT_SECRET);
+    const token = req.header("Authorization");
+
+    if (!token) {
+      res.status(401).json({ message: "Access denied. No token provided." });
+      return;
+    }
+
+    const decoded = jwt.verify(token.replace("Bearer ", ""), JWT_SECRET) as {
+      userId: string;
+      email: string;
+    };
     req.user = decoded;
+
     next();
   } catch (error) {
     res.status(401).json({ message: "Invalid token." });
