@@ -11,6 +11,7 @@ const AddressSchema = new mongoose_1.default.Schema({
     state: { type: String, required: true },
     zipCode: { type: String, required: true },
     country: { type: String, required: true },
+    isDefault: { type: Boolean, default: false },
 }, { _id: false });
 const UserSchema = new mongoose_1.default.Schema({
     email: { type: String, required: true, unique: true },
