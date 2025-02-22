@@ -15,6 +15,7 @@ const UserSchema = new mongoose.Schema(
       },
     ],
     loyaltyPoints: { type: Number, default: 0 },
+    profilePicture: { type: String, default: "" },
   },
   { timestamps: true }
 );
