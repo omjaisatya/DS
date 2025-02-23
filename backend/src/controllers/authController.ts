@@ -5,6 +5,7 @@ import User from "../models/User";
 import Otp from "../models/Otp";
 import sendEmail from "../utils/sendEmail";
 import dotenv from "dotenv";
+import bcrypt from "bcryptjs";
 
 dotenv.config();
 
@@ -63,5 +64,51 @@ export const verifyOtp = async (req: Request, res: Response): Promise<void> => {
     res.status(200).json({ message: "OTP verified", token });
   } catch (error) {
     res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const register = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { email, password, name } = req.body;
+    let user = await User.findOne({ email });
+    if (user) {
+      res.status(400).json({ message: "User already exists" });
+      return;
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    user = new User({ email, password: hashedPassword, name });
+    await user.save();
+
+    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET!, {
+      expiresIn: "7d",
+    });
+    res.status(201).json({ message: "User registered", token, user });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
+export const login = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) {
+      res.status(400).json({ message: "Invalid credentials" });
+      return;
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      res.status(400).json({ message: "Invalid credentials" });
+      return;
+    }
+
+    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET!, {
+      expiresIn: "7d",
+    });
+    res.status(200).json({ message: "Login successful", token, user });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
   }
 };

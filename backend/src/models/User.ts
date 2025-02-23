@@ -29,12 +29,14 @@ interface User extends mongoose.Document {
   phone: string;
   profilePicture: string;
   addresses: mongoose.Types.DocumentArray<Address>;
+  password: string;
 }
 
 const UserSchema = new mongoose.Schema<User>(
   {
     email: { type: String, required: true, unique: true },
     name: { type: String, default: "" },
+    password: { type: String, required: true },
     phone: { type: String, default: "" },
     profilePicture: { type: String, default: "" },
     addresses: { type: [AddressSchema], default: [] },
